@@ -1,0 +1,29 @@
+#Following code illustrates how to create custom object detection model using Python.
+
+#Import ImageAI library for object detection with input images containing more than 20 objects such as person, dog, cat, plane, truck etc.  
+!pip install https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.1/imageai-2.0.1-py3-none-any.whl
+from imageai.Detection import ObjectDetection
+
+#Set the path containing input images in the local system
+execution_path = os.getcwd()
+
+#Create a detector object and load the model which runs on the input images  
+detector = ObjectDetection()
+detector.setModelTypeAsRetinaNet()
+detector.setModelPath(os.path.join(execution_path, "resnet50_coco_best_v2.0.1.h5"))   #resnet is the CNN architecture I used
+detector.loadModel()
+
+#One can detect custom images by specifying what type of objects that could be present in the function parameter below
+custom_objects = detector.CustomObjects(person=True, cat = True, dog= True, car=True)
+detections = detector.detectCustomObjectsFromImage(custom_objects=custom_objects, 
+                                                   input_image=os.path.join(execution_path, "cars.jpg"),
+                                                   output_image_path=os.path.join(execution_path, "cars_new.jpg"),
+                                                   minimum_percentage_probability=65)
+                                                   
+
+#Display the object and the probability value indicating the confidence score/level
+for eachObject in detections:
+    print(eachObject["name"] + " : " + eachObject["percentage_probability"])
+    print("------------------------------------")
+    
+    
